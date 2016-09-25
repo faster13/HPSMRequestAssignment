@@ -1,0 +1,23 @@
+html, body, .choices {
+  height: 50px;
+  width: 70px;
+  margin: 0;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.choice {
+  height: 50%;
+  margin: 0.9em;
+  padding: 0.1em;
+  background-color: #E5F2F2;
+  cursor: pointer;
+}
+
+.choice:hover {
+  background-color: #CFF2F2;
+}

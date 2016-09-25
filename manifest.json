@@ -1,0 +1,44 @@
+{
+
+  "manifest_version": 2,
+  "name": "HPSM Request Assignment",
+  "version": "1.0",
+
+  "description": "HPSM query analisis",
+
+  "icons": {
+    "48": "icons/hpsmra-48.png"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "hpsmra@mozilla.org",
+      "strict_min_version": "45.0"
+    }
+  },
+
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "tabs",
+    "storage",
+    "http://10.112.252.168/*",
+    "https://10.112.252.168/*"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "48": "icons/hpsmra-48.png"
+    },
+    "default_title": "Request Assignment"
+  },
+
+  "options_ui": {
+    "page": "options/options.html"
+  }
+
+}
