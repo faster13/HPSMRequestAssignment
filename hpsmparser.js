@@ -23,46 +23,66 @@ this.group = 'NULL'; // Поле: Группа.
 // В этом блоке решается задача поиска сотрудника с наименьшим числом запросов.
 function listMapEllements(value, key, map)
 {
-var arrMultiEmp = []; // Массив, в который помещаются сотрудники с наименьшим кол-вом запросов для добавления в resultEmp.
-var stateFlg = ''; // Флаг, который устанавливается в значения '<,>,=,zero'
-if(resultEmp.has(key.group)) // Проверка существование записи по ключу Группа. Если запись отсутствует - создаем новую.
-{
-arrMultiEmp = resultEmp.get(key.group).slice(); // Копирование массива из resultEmp->Value в массив arrMultiEmp
-                                                // Выполняется проверка колличества запросов очередного пользователя из arrEmp c с пользователями в коллекции resultEmp.
-arrMultiEmp.forEach(function(item, i, arr){
-  if(parseInt(value) > parseInt(item.cntRequest))  stateFlg = '>';
-  if(parseInt(value) == parseInt(item.cntRequest)) stateFlg = '=';
-  if(parseInt(value) < parseInt(item.cntRequest)) stateFlg = '<';
-  if(parseInt(value) == 0) stateFlg = 'zero';
-});
-if(stateFlg == '<') // Если число запросов проверямого сотрудника меньше, чем у сотрудников в коллекции resultEmp,
-                    // удаляем всех сотрудников из массива arrMultiEmp и добавляем этого сотрудника.
-{
-  arrMultiEmp.length = 1;
-  arrMultiEmp[0] = key;
-  resultEmp.delete(key.group);
-  resultEmp.set(key.group, arrMultiEmp);
-  console.log('ADD("<"): ' + key.name + '::' + key.group + '::' + key.cntRequest);
+  var arrMultiEmp = []; // Массив, в который помещаются сотрудники с наименьшим кол-вом запросов для добавления в resultEmp.
+  var stateFlg = ''; // Флаг, который устанавливается в значения '<,>,=,zero'
+  if(resultEmp.has(key.group)) // Проверка существование записи по ключу Группа. Если запись отсутствует - создаем новую.
+  {
+  arrMultiEmp = resultEmp.get(key.group).slice(); // Копирование массива из resultEmp->Value в массив arrMultiEmp
+                                                  // Выполняется проверка колличества запросов очередного пользователя из arrEmp c с пользователями в коллекции resultEmp.
+  arrMultiEmp.forEach(function(item, i, arr){
+    if(parseInt(value) > parseInt(item.cntRequest))  stateFlg = '>';
+    if(parseInt(value) == parseInt(item.cntRequest)) stateFlg = '=';
+    if(parseInt(value) < parseInt(item.cntRequest)) stateFlg = '<';
+    if(parseInt(value) == 0) stateFlg = 'zero';
+  });
+  if(stateFlg == '<') // Если число запросов проверямого сотрудника меньше, чем у сотрудников в коллекции resultEmp,
+                      // удаляем всех сотрудников из массива arrMultiEmp и добавляем этого сотрудника.
+  {
+    arrMultiEmp.length = 1;
+    arrMultiEmp[0] = key;
+    resultEmp.delete(key.group);
+    resultEmp.set(key.group, arrMultiEmp);
+    console.log('ADD("<"): ' + key.name + '::' + key.group + '::' + key.cntRequest);
+  }
+  else if(stateFlg == '=' || stateFlg == 'zero') // Если число запросов проверямого сотрудника равно числу запросов у уже отобранных сотрудников,
+                                                 // или чило запросов равно нулю, он добавляется к списку сотрудников с наименьшим числом запросов (arrMultiEmp).
+  {
+    arrMultiEmp.push(key);
+    resultEmp.delete(key.group);
+    resultEmp.set(key.group, arrMultiEmp);
+    console.log('ADD("="): ' + key.name + '::' + key.group + '::' + key.cntRequest);
+  }
+  else // Если проверяемый сотрудник имеет большее число запросов, никакие действия не выполняются.
+  {
+    console.log('SKIP(">"): ' + key.name + '::' + key.group + '::' + key.cntRequest);
+  }
+  }
+  else
+  {
+    console.log('ADD(NEW): ' + key.name + '::' + key.group + '::' + key.cntRequest);
+    arrMultiEmp.push(key);
+    resultEmp.set(key.group, arrMultiEmp);
+  }
 }
-else if(stateFlg == '=' || stateFlg == 'zero') // Если число запросов проверямого сотрудника равно числу запросов у уже отобранных сотрудников,
-                                               // или чило запросов равно нулю, он добавляется к списку сотрудников с наименьшим числом запросов (arrMultiEmp).
-{
-  arrMultiEmp.push(key);
-  resultEmp.delete(key.group);
-  resultEmp.set(key.group, arrMultiEmp);
-  console.log('ADD("="): ' + key.name + '::' + key.group + '::' + key.cntRequest);
+
+function currentTime(){
+  var cTime = new Date(Date.now());
+  this.cYear = cTime.getYear();
+  this.cMonth = (cTime.getMonth() < 10 ? '0' : '') + cTime.getMonth();
+  this.cDay = (cTime.getDay() < 10 ? '0' : '') + cTime.getDay();
+  this.cHours = (cTime.getHours() < 10 ? '0' : '') + cTime.getHours();
+  this.cMinutes = (cTime.getMinutes() < 10 ? '0' : '') + cTime.getMinutes();
+  this.cSeconds = (cTime.getSeconds() < 10 ? '0' : '') + cTime.getSeconds();
+  this.cGetDate = this.cDay + "." + this.cMonth + "." + this.cYear;
+  this.cGetTime = this.cHours + ":" + this.cMinutes + ":" + this.cSeconds;
+  this.cFullDate = cTime;
 }
-else // Если проверяемый сотрудник имеет большее число запросов, никакие действия не выполняются.
-{
-  console.log('SKIP(">"): ' + key.name + '::' + key.group + '::' + key.cntRequest);
-}
-}
-else
-{
-console.log('ADD(NEW): ' + key.name + '::' + key.group + '::' + key.cntRequest);
-arrMultiEmp.push(key);
-resultEmp.set(key.group, arrMultiEmp);
-}
+
+
+// Отражает текущее время
+if(document.getElementById('cwc_masthead_title_link')){
+  var timeNow = new currentTime();
+  document.getElementById('cwc_masthead_title_link').innerText = "Время обработки: " + timeNow.cGetTime;
 }
 
 // Блок, в котором выполняется поиск сотрудников.
@@ -150,6 +170,7 @@ var tdCnt = 0;
 
 console.log('::RESULT');
 
+/* #########################    КОНСТРУКТОР  ################################ */
 resultTag = document.createElement("style");
 resultTag.type="text/css";
 resultTag.innerText = "\
@@ -178,9 +199,11 @@ font-weight: 400; \
   background: #9ce7ff; \
 } \
 ";
+
 document.body.appendChild(resultTag);
 
 empTable.remove(); // Удаление таблицы запросов.
+
 resultTag = document.createElement("table");
 resultTag.className = "tableOPKSZ";
 resultTag.Id = "genTableOPKSZ";
